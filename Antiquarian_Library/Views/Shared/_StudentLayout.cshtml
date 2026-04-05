@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Antiquarian Library</title>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-left">
+                <i data-feather="book-open"></i>
+                <div>
+                    <h1 class="header-title text-white" style="color: white">Antiquarian Library</h1>
+                    <div class="header-subtitle text-white">@ViewData["Subtitle"]</div>
+                </div>
+            </div>
+            <div class="header-right">
+                <a asp-controller="Home" asp-action="Index" class="header-btn" style="text-decoration: none;">
+                    <i data-feather="arrow-left"></i> Back to Home
+                </a>
+            </div>
+        </header>
+
+        <main class="student-content">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+      feather.replace();
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

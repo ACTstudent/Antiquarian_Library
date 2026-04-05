@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Antiquarian Library</title>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="app-container">
+            <header class="app-header">
+                <div class="header-left">
+                    <i data-feather="book-open"></i>
+                    <div>
+                        <h1 class="header-title text-white" style="color: white">Antiquarian Library</h1>
+                        <div class="header-subtitle text-white">Administration Panel</div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <i data-feather="bell"></i>
+                    <form asp-controller="User" asp-action="Logout" method="post" style="display:inline;">
+                        <button type="submit" class="header-btn">
+                            <i data-feather="log-out"></i> Logout
+                        </button>
+                    </form>
+                </div>
+            </header>
+
+            <div class="app-body">
+                <aside class="app-sidebar">
+                    <a asp-controller="Home" asp-action="Dashboard" class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")">
+                        <i data-feather="home"></i> Dashboard
+                    </a>
+                    <a asp-controller="Book" asp-action="Index" class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Book" ? "active" : "")">
+                        <i data-feather="book"></i> Books
+                    </a>
+                    <a asp-controller="Borrowing" asp-action="Index" class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Borrowing" ? "active" : "")">
+                        <i data-feather="check-square"></i> Borrowing Books
+                    </a>
+                    <a asp-controller="Request" asp-action="Index" class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Request" ? "active" : "")">
+                        <i data-feather="help-circle"></i> Requests
+                    </a>
+                    <a asp-controller="EntryLog" asp-action="Index" class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "EntryLog" ? "active" : "")">
+                        <i data-feather="users"></i> Entry Logs
+                    </a>
+                </aside>
+
+                <main class="app-content">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    }
+    else
+    {
+        @RenderBody()
+    }
+
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+      feather.replace();
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

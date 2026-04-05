@@ -1,0 +1,54 @@
+@{
+    ViewData["Title"] = "Library Entry";
+    ViewData["Subtitle"] = "Library Entry Registration";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+<div style="text-align: center;">
+    <h2 class="page-title" style="margin-bottom: 0.5rem; color: var(--primary-brown);">Library Entry</h2>
+    <p style="color: var(--accent-tan);">Please sign in to record your visit to the library</p>
+</div>
+
+<div class="student-form-card">
+    <div class="student-card-header">
+        Attendance Registration
+    </div>
+
+    @if (TempData["Message"] != null)
+    {
+        <div style="color: var(--success-text); background-color: var(--success-bg); padding: 12px; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
+            @TempData["Message"]
+        </div>
+    }
+
+    <form asp-action="Entry" method="post">
+        <div class="form-group">
+            <label class="form-label" style="font-size: 14px; color: var(--primary-brown);">Student Name</label>
+            <input type="text" name="studentName" class="form-control" placeholder="Enter your full name" required />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" style="font-size: 14px; color: var(--primary-brown);">Student ID</label>
+            <input type="text" name="studentId" class="form-control" placeholder="Enter your student ID" required />
+        </div>
+
+        <div class="form-group" style="margin-bottom: 2rem;">
+            <label class="form-label" style="font-size: 14px; color: var(--primary-brown);">Year Level</label>
+            <select name="yearLevel" class="form-control" required style="color: var(--primary-brown);">
+                <option value="" disabled selected>Select year level</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; font-size: 16px; margin-bottom: 1rem;">
+            <i data-feather="check-circle" style="width: 18px; height: 18px;"></i> Sign In
+        </button>
+
+        <div style="text-align: center; color: var(--accent-tan); font-size: 12px; border: 1px solid var(--bg-sidebar); padding: 12px; border-radius: 8px;">
+            Your entry will be recorded with the current date and time
+        </div>
+    </form>
+</div>

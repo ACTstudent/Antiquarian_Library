@@ -1,0 +1,55 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2 class="page-title">Dashboard Overview</h2>
+
+<div class="dashboard-grid">
+    <div class="card stat-card">
+        <div class="stat-title">
+            <span>Total Books</span>
+            <i data-feather="book-open" style="color: var(--accent-tan);"></i>
+        </div>
+        <div class="stat-value text-primary-brown">@ViewBag.TotalBooks</div>
+    </div>
+    
+    <div class="card stat-card">
+        <div class="stat-title">
+            <span>Available Books</span>
+            <i data-feather="book" style="color: var(--accent-tan);"></i>
+        </div>
+        <div class="stat-value text-primary-brown">@ViewBag.AvailableBooks</div>
+    </div>
+
+    <div class="card stat-card">
+        <div class="stat-title">
+            <span>Pending Requests</span>
+            <i data-feather="help-circle" style="color: var(--accent-tan);"></i>
+        </div>
+        <div class="stat-value text-primary-brown">@ViewBag.PendingRequests</div>
+    </div>
+
+    <div class="card stat-card">
+        <div class="stat-title">
+            <span>Approved Borrowings</span>
+            <i data-feather="check-square" style="color: var(--success-text);"></i>
+        </div>
+        <div class="stat-value" style="color: var(--success-text);">@ViewBag.ApprovedBorrowings</div>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="stat-title" style="margin-bottom: 1.5rem; font-family: var(--font-serif); font-size: 20px;">Recent Activity</h3>
+    <hr style="border: 0; border-top: 1px solid var(--accent-tan); margin-bottom: 1rem; margin-left: -1.5rem; margin-right: -1.5rem;" />
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0;">
+        <div>
+            <div style="font-weight: 500;">John Smith entered the library</div>
+            <div style="font-size: 14px; color: var(--accent-tan);">STU002 • 3rd Year</div>
+        </div>
+        <div style="text-align: right; font-size: 14px; color: var(--accent-tan);">
+            <div>2026-03-23</div>
+            <div>09:30 AM</div>
+        </div>
+    </div>
+</div>

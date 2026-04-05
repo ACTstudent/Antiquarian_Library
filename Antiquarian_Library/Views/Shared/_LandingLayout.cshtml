@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Antiquarian Library</title>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="landing-body">
+    <div class="landing-container">
+        @RenderBody()
+    </div>
+
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+      feather.replace();
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,65 @@
+@model IEnumerable<Antiquarian_Library.Models.BorrowingBook>
+
+@{
+    ViewData["Title"] = "Borrowing Books";
+}
+
+<h2 class="page-title">Borrowing Books</h2>
+
+<div class="card">
+    <div style="font-weight: 500; margin-bottom: 1rem; color: var(--primary-brown);">
+        Active Borrowings (@Model.Count(b => b.Status == "Active"))
+    </div>
+    
+    <hr style="border: 0; border-top: 1px solid var(--accent-tan); margin-bottom: 1.5rem; margin-left: -1.5rem; margin-right: -1.5rem;" />
+
+    <div style="margin-bottom: 1.5rem; position: relative;">
+        <i data-feather="search" style="position: absolute; left: 12px; top: 12px; color: var(--accent-tan);"></i>
+        <input type="text" class="form-control" placeholder="Search actively borrowed books..." style="padding-left: 40px; background-color: var(--bg-main);" />
+    </div>
+
+    <div class="data-table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Book Title</th>
+                    <th>Borrower Name</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                    <tr>
+                        <td><strong>@item.BookTitle</strong></td>
+                        <td>@item.BorrowerName</td>
+                        <td>@item.DueDate.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            @if (item.Status == "Active")
+                            {
+                                @if (item.DueDate < DateTime.Now)
+                                {
+                                    <span style="background-color: var(--error-bg); color: var(--error-text); padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px;">Overdue</span>
+                                }
+                                else
+                                {
+                                    <span style="background-color: var(--success-bg); color: var(--success-text); padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px;">@item.Status</span>
+                                }
+                            }
+                            else
+                            {
+                                <span style="background-color: var(--bg-sidebar); color: var(--primary-brown); padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px;">@item.Status</span>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: var(--accent-tan);">No active borrowing records found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

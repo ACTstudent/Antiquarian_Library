@@ -1,0 +1,81 @@
+@{
+    ViewData["Title"] = "Home Gateway";
+    Layout = "~/Views/Shared/_LandingLayout.cshtml";
+}
+
+<div class="landing-header">
+    <i data-feather="book-open" class="landing-icon"></i>
+    <h1 class="landing-title">Antiquarian Library</h1>
+    <p class="landing-subtitle">Preserving Knowledge Through the Ages</p>
+</div>
+
+<div style="display: flex; justify-content: center; align-items: center; margin-bottom: 2.5rem;">
+    <div style="height: 1px; width: 100px; background-color: var(--accent-tan);"></div>
+    <i data-feather="shield" style="color: var(--primary-brown); margin: 0 1rem; width: 20px; height: 20px;"></i>
+    <div style="height: 1px; width: 100px; background-color: var(--accent-tan);"></div>
+</div>
+
+<div class="landing-cards-container">
+    <!-- Administrator Portal -->
+    <div class="landing-card">
+        <div class="landing-card-header">
+            <i data-feather="log-in"></i> Administrator Portal
+        </div>
+        <p style="color: #7a6352; font-size: 14px; margin-bottom: 1.5rem; font-weight: 500;">Access the library management system</p>
+
+        <form asp-controller="User" asp-action="Login" method="post">
+            <div class="form-group">
+                <label class="form-label" style="font-size: 14px; color: #3b1f0d; font-weight: 600;">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Enter username" required />
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label class="form-label" style="font-size: 14px; color: #3b1f0d; font-weight: 600;">Password</label>
+                <div style="position: relative;">
+                    <input type="password" name="password" class="form-control" placeholder="Enter password" required />
+                    <i data-feather="eye" style="position: absolute; right: 12px; top: 12px; color: var(--primary-brown); width: 18px; height: 18px;"></i>
+                </div>
+            </div>
+
+            @if (TempData["LoginError"] != null)
+            {
+                <div style="color: #c0392b; background-color: #fdecea; border: 1px solid #e74c3c; padding: 10px 14px; border-radius: 6px; margin-bottom: 1rem; text-align: center; font-size: 14px; font-weight: 500;">
+                    @TempData["LoginError"]
+                </div>
+            }
+
+            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; font-size: 17px; padding: 14px 20px; margin-bottom: 1.25rem; font-weight: 700; letter-spacing: 0.5px;">
+                <i data-feather="log-in" style="width:18px;height:18px;"></i>&nbsp; Log In
+            </button>
+            <div style="text-align: center; font-size: 13px; color: #7a6352; font-weight: 500; background: #f5efe7; border-radius: 6px; padding: 8px;">
+                Default credentials: <strong style="color: #3b1f0d;">admin</strong> / <strong style="color: #3b1f0d;">admin123</strong>
+            </div>
+        </form>
+    </div>
+
+    <!-- Student Services -->
+    <div class="landing-card">
+        <div class="landing-card-header">
+            <i data-feather="users"></i> Student Services
+        </div>
+        <p style="color: #7a6352; font-size: 14px; margin-bottom: 1.5rem; font-weight: 500;">Access library resources and services</p>
+
+        <a asp-controller="Student" asp-action="Books" class="landing-link-button">
+            <i data-feather="book" style="width:20px;height:20px;"></i>
+            <div>
+                <div style="font-size: 16px; font-weight: 700;">View Available Books</div>
+                <div style="font-size: 12px; opacity: 0.85; margin-top: 2px;">Browse our collection and request to borrow books</div>
+            </div>
+        </a>
+
+        <div style="height: 1rem;"></div>
+
+        <a asp-controller="Student" asp-action="Entry" class="landing-link-button">
+            <i data-feather="user-check" style="width:20px;height:20px;"></i>
+            <div>
+                <div style="font-size: 16px; font-weight: 700;">Library Entry</div>
+                <div style="font-size: 12px; opacity: 0.85; margin-top: 2px;">Sign in to use library facilities</div>
+            </div>
+        </a>
+    </div>
+</div>

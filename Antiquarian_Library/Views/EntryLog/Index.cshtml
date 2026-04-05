@@ -1,0 +1,45 @@
+@model IEnumerable<Antiquarian_Library.Models.EntryLog>
+
+@{
+    ViewData["Title"] = "Library Entry Logs";
+}
+
+<h2 class="page-title">Library Entry Logs</h2>
+
+<div class="card">
+    <div style="font-weight: 500; margin-bottom: 1rem; color: var(--primary-brown);">
+        Student Attendance Records (@Model.Count())
+    </div>
+    
+    <hr style="border: 0; border-top: 1px solid var(--accent-tan); margin-bottom: 1.5rem; margin-left: -1.5rem; margin-right: -1.5rem;" />
+
+    <div style="margin-bottom: 1.5rem; position: relative;">
+        <i data-feather="search" style="position: absolute; left: 12px; top: 12px; color: var(--accent-tan);"></i>
+        <input type="text" class="form-control" placeholder="Search by student name, ID, or year level..." style="padding-left: 40px; background-color: var(--bg-main);" />
+    </div>
+
+    <div class="data-table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Student ID</th>
+                    <th>Year Level</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                    <tr>
+                        <td><strong>@item.StudentName</strong></td>
+                        <td>@item.StudentId</td>
+                        <td>@item.YearLevel</td>
+                        <td>@item.Date.ToString("yyyy-MM-dd")</td>
+                        <td>@item.Time</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

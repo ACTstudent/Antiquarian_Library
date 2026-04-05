@@ -1,0 +1,57 @@
+@model Antiquarian_Library.Models.BorrowingRequest
+@{
+    ViewData["Title"] = "Request Book";
+    ViewData["Subtitle"] = "Borrowing Request";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+<div style="text-align: center;">
+    <h2 class="page-title" style="margin-bottom: 0.5rem; color: var(--primary-brown);">Borrowing Request</h2>
+    <p style="color: var(--accent-tan);">Please provide your details to request this book</p>
+</div>
+
+<div class="student-form-card">
+    <div class="student-card-header">
+        Requesting: @ViewBag.BookTitle
+    </div>
+
+    <!-- Info Box from Figma: highlight info box appears at top -->
+    <div style="background-color: var(--bg-sidebar); border: 1px solid var(--accent-tan); border-radius: 8px; padding: 1rem; margin-bottom: 2rem; font-size: 14px;">
+        <div style="font-weight: 600; margin-bottom: 8px;"><i data-feather="info" style="width: 16px; height: 16px; vertical-align: text-bottom;"></i> Important Notice</div>
+        <ul style="margin-left: 20px; line-height: 1.6;">
+            <li>Books must be returned within 1 week (7 days) from approval</li>
+            <li>The penalty rate per day applies for late returns</li>
+        </ul>
+        <div style="margin-top: 10px; font-weight: 500; color: var(--success-text);">
+            Return date is calculated automatically upon approval.
+        </div>
+    </div>
+
+    <form asp-action="RequestBorrow" method="post">
+        <input type="hidden" name="BookTitle" value="@ViewBag.BookTitle" />
+        
+        <div class="form-group">
+            <label class="form-label" style="font-size: 14px; color: var(--primary-brown);">Student Name</label>
+            <input type="text" asp-for="StudentName" class="form-control" placeholder="Enter your full name" required />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" style="font-size: 14px; color: var(--primary-brown);">Student ID</label>
+            <input type="text" asp-for="StudentId" class="form-control" placeholder="Enter your student ID" required />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" style="font-size: 14px; color: var(--primary-brown);">Email Address</label>
+            <input type="email" asp-for="Email" class="form-control" placeholder="Enter your university email" required />
+        </div>
+
+        <div class="form-group" style="margin-bottom: 2rem;">
+            <label class="form-label" style="font-size: 14px; color: var(--primary-brown);">Phone Number</label>
+            <input type="tel" asp-for="Phone" class="form-control" placeholder="Enter your phone number" required />
+        </div>
+
+        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; font-size: 16px;">
+            Submit Request
+        </button>
+    </form>
+</div>

@@ -1,0 +1,40 @@
+@model IEnumerable<Antiquarian_Library.Models.Book>
+
+@{
+    ViewData["Title"] = "Available Books";
+    ViewData["Subtitle"] = "Browse Available Books";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+<div style="width: 100%; max-width: 1200px;">
+    <h2 class="page-title" style="margin-bottom: 0.5rem; color: var(--primary-brown); text-align: left;">Available Books</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div style="color: var(--success-text); background-color: var(--success-bg); padding: 12px; border-radius: 8px; margin-top: 1rem; text-align: left;">
+            @TempData["Message"]
+        </div>
+    }
+
+    <div class="student-books-grid">
+        @foreach (var book in Model)
+        {
+            <div class="book-card">
+                <div class="book-card-title">@book.Title</div>
+                <div class="book-card-author">by @book.Author</div>
+                
+                <div class="book-card-details">
+                    <div>ISBN: @book.ISBN</div>
+                    <div>Category: @book.Category</div>
+                    <div>Published: @book.Year</div>
+                    <div>Available: @book.Available of @book.Total copies</div>
+                    <div>Penalty per day: $@book.PenaltyPerDay</div>
+                </div>
+
+                <a asp-action="RequestBorrow" asp-route-bookTitle="@book.Title" class="btn-primary book-card-btn" style="text-decoration: none;">
+                    Request to Borrow
+                </a>
+            </div>
+        }
+    </div>
+</div>
