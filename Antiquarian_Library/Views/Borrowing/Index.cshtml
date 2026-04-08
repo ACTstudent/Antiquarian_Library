@@ -11,6 +11,19 @@
         Active Borrowings (@Model.Count(b => b.Status == "Active"))
     </div>
     
+    @if (TempData["Message"] != null)
+    {
+        <div style="color: var(--success-text); background-color: var(--success-bg); padding: 12px; border-radius: 8px; margin-bottom: 1rem; text-align: left;">
+            @TempData["Message"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div style="color: var(--error-text); background-color: var(--error-bg); padding: 12px; border-radius: 8px; margin-bottom: 1rem; text-align: left;">
+            @TempData["Error"]
+        </div>
+    }
+
     <hr style="border: 0; border-top: 1px solid var(--accent-tan); margin-bottom: 1.5rem; margin-left: -1.5rem; margin-right: -1.5rem;" />
 
     <div style="margin-bottom: 1.5rem; position: relative;">
@@ -26,6 +39,7 @@
                     <th>Borrower Name</th>
                     <th>Due Date</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,12 +65,22 @@
                                 <span style="background-color: var(--bg-sidebar); color: var(--primary-brown); padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px;">@item.Status</span>
                             }
                         </td>
+                        <td>
+                            @if (item.Status == "Active")
+                            {
+                                <form asp-action="Return" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                    <button type="submit" class="btn-primary" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;">
+                                        <i data-feather="corner-up-left" style="width: 14px; height: 14px;"></i> Return
+                                    </button>
+                                </form>
+                            }
+                        </td>
                     </tr>
                 }
                 @if (!Model.Any())
                 {
                     <tr>
-                        <td colspan="4" style="text-align: center; color: var(--accent-tan);">No active borrowing records found.</td>
+                        <td colspan="5" style="text-align: center; color: var(--accent-tan);">No active borrowing records found.</td>
                     </tr>
                 }
             </tbody>

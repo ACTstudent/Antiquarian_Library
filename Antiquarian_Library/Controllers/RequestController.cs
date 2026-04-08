@@ -25,7 +25,23 @@ namespace Antiquarian_Library.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Approve(string id)
         {
-            await _db.ApproveRequestAsync(id);
+            var success = await _db.ApproveRequestAsync(id);
+            if (!success)
+            {
+                TempData["Error"] = "Cannot approve: An error occurred, or the request is no longer pending.";
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reject(string id)
+        {
+            var success = await _db.RejectRequestAsync(id);
+            if (!success)
+            {
+                TempData["Error"] = "Cannot reject: An error occurred, or the request is no longer pending.";
+            }
             return RedirectToAction(nameof(Index));
         }
     }

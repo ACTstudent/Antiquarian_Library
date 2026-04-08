@@ -43,12 +43,29 @@ namespace Antiquarian_Library.Controllers
         public async Task<IActionResult> Books()
         {
             var books = await _db.GetBooksAsync();
+            var requests = await _db.GetRequestsAsync();
+            ViewBag.PendingCounts = requests.Where(r => r.Status == "Pending")
+                                            .GroupBy(r => r.BookTitle)
+                                            .ToDictionary(g => g.Key, g => g.Count());
             return View(books);
         }
 
         [HttpGet]
         public async Task<IActionResult> RequestBorrow(string bookTitle)
         {
+            var books = await _db.GetBooksAsync();
+            var requests = await _db.GetRequestsAsync();
+            var book = books.FirstOrDefault(b => b.Title == bookTitle);
+            
+            var pendingCount = requests.Count(r => r.BookTitle == bookTitle && r.Status == "Pending");
+            var actuallyAvailable = book != null ? book.Available - pendingCount : 0;
+
+            if (book == null || actuallyAvailable <= 0)
+            {
+                TempData["Error"] = $"Cannot request '{bookTitle}'. It is currently out of stock.";
+                return RedirectToAction(nameof(Books));
+            }
+
             ViewBag.BookTitle = bookTitle;
             return View();
         }
@@ -57,6 +74,19 @@ namespace Antiquarian_Library.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RequestBorrow(BorrowingRequest req)
         {
+            var books = await _db.GetBooksAsync();
+            var requests = await _db.GetRequestsAsync();
+            var book = books.FirstOrDefault(b => b.Title == req.BookTitle);
+            
+            var pendingCount = requests.Count(r => r.BookTitle == req.BookTitle && r.Status == "Pending");
+            var actuallyAvailable = book != null ? book.Available - pendingCount : 0;
+
+            if (book == null || actuallyAvailable <= 0)
+            {
+                TempData["Error"] = $"Cannot request '{req.BookTitle}'. It is currently out of stock.";
+                return RedirectToAction(nameof(Books));
+            }
+
             req.RequestDate = DateTime.Today;
             req.ReturnDate = DateTime.Today.AddDays(7);
             req.Status = "Pending";

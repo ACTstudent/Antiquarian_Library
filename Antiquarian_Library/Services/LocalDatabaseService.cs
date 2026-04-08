@@ -1,50 +1,34 @@
+using Antiquarian_Library.Data;
 using Antiquarian_Library.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 
 namespace Antiquarian_Library.Services
 {
     public class LocalDatabaseService
     {
-        private static List<Book> _books = new List<Book>
+        private readonly ApplicationDbContext _context;
+
+        public LocalDatabaseService(ApplicationDbContext context)
         {
-            new Book { Id = "1", Title = "Pride and Prejudice", Author = "Jane Austen", ISBN = "978-0141439518", Category = "Classic Literature", Year = 1813, Total = 5, Available = 3, PenaltyPerDay = 5.0m },
-            new Book { Id = "2", Title = "Moby-Dick", Author = "Herman Melville", ISBN = "978-0142437247", Category = "Adventure", Year = 1851, Total = 4, Available = 2, PenaltyPerDay = 7.50m },
-            new Book { Id = "3", Title = "The Great Gatsby", Author = "F. Scott Fitzgerald", ISBN = "978-0743273565", Category = "Fiction", Year = 1925, Total = 6, Available = 4, PenaltyPerDay = 10.00m }
-        };
-
-        // Create a default admin user. Actual password hashing handles on Create
-        private static List<User> _users = new List<User>
-        {
-            new User { Id = "1", Username = "admin", PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"), Role = "Administrator" }
-        };
-
-        private static List<BorrowingRequest> _requests = new List<BorrowingRequest>
-        {
-            new BorrowingRequest { Id = "1", BookTitle = "Pride and Prejudice", StudentName = "Emily Watson", StudentId = "STU001", Email = "emily.watson@university.edu", Phone = "555-0123", RequestDate = DateTime.Parse("2026-03-20"), ReturnDate = DateTime.Parse("2026-04-03"), Status = "Pending" }
-        };
-
-        private static List<EntryLog> _logs = new List<EntryLog>
-        {
-            new EntryLog { Id = "1", StudentName = "John Smith", StudentId = "STU002", YearLevel = "3rd Year", Date = DateTime.Parse("2026-03-23"), Time = "09:30 AM" }
-        };
-
-        private static List<BorrowingBook> _borrowed = new List<BorrowingBook>();
-
-        // --- Books ---
-        public Task<List<Book>> GetBooksAsync() => Task.FromResult(_books.ToList());
-
-        public Task<Book?> GetBookAsync(string id) => Task.FromResult(_books.FirstOrDefault(b => b.Id == id));
-
-        public Task CreateBookAsync(Book book)
-        {
-            book.Id = Guid.NewGuid().ToString();
-            _books.Add(book);
-            return Task.CompletedTask;
+            _context = context;
         }
 
-        public Task UpdateBookAsync(string id, Book book)
+        // --- Books ---
+        public async Task<List<Book>> GetBooksAsync() => await _context.Books.ToListAsync();
+
+        public async Task<Book?> GetBookAsync(string id) => await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+
+        public async Task CreateBookAsync(Book book)
         {
-            var existing = _books.FirstOrDefault(b => b.Id == id);
+            book.Id = Guid.NewGuid().ToString();
+            _context.Books.Add(book);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateBookAsync(string id, Book book)
+        {
+            var existing = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
             if (existing != null)
             {
                 existing.Title = book.Title;
@@ -55,73 +39,136 @@ namespace Antiquarian_Library.Services
                 existing.Total = book.Total;
                 existing.Available = book.Available;
                 existing.PenaltyPerDay = book.PenaltyPerDay;
+                await _context.SaveChangesAsync();
             }
-            return Task.CompletedTask;
         }
 
-        public Task DeleteBookAsync(string id)
+        public async Task DeleteBookAsync(string id)
         {
-            _books.RemoveAll(b => b.Id == id);
-            return Task.CompletedTask;
+            var existing = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+            if (existing != null)
+            {
+                _context.Books.Remove(existing);
+                await _context.SaveChangesAsync();
+            }
         }
 
         // --- Users ---
-        public Task<List<User>> GetUsersAsync() => Task.FromResult(_users.ToList());
+        public async Task<List<User>> GetUsersAsync() => await _context.Users.ToListAsync();
 
-        public Task<User?> GetUserAsync(string id) => Task.FromResult(_users.FirstOrDefault(u => u.Id == id));
-        public Task<User?> GetUserByUsernameAsync(string username) => Task.FromResult(_users.FirstOrDefault(u => u.Username == username));
+        public async Task<User?> GetUserAsync(string id) => await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        
+        public async Task<User?> GetUserByUsernameAsync(string username) => await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
 
-        public Task CreateUserAsync(User user)
+        public async Task CreateUserAsync(User user)
         {
             user.Id = Guid.NewGuid().ToString();
-            _users.Add(user);
-            return Task.CompletedTask;
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
         }
 
-        public Task UpdateUserAsync(string id, User user)
+        public async Task UpdateUserAsync(string id, User user)
         {
-            var existing = _users.FirstOrDefault(u => u.Id == id);
+            var existing = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
             if (existing != null)
             {
                 existing.Username = user.Username;
                 existing.PasswordHash = user.PasswordHash;
                 existing.Role = user.Role;
+                await _context.SaveChangesAsync();
             }
-            return Task.CompletedTask;
         }
 
-        public Task DeleteUserAsync(string id)
+        public async Task DeleteUserAsync(string id)
         {
-            _users.RemoveAll(u => u.Id == id);
-            return Task.CompletedTask;
+            var existing = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (existing != null)
+            {
+                _context.Users.Remove(existing);
+                await _context.SaveChangesAsync();
+            }
         }
 
         // --- BorrowingRequests ---
-        public Task<List<BorrowingRequest>> GetRequestsAsync() => Task.FromResult(_requests.ToList());
-        public Task<BorrowingRequest?> GetRequestAsync(string id) => Task.FromResult(_requests.FirstOrDefault(r => r.Id == id));
-        public Task CreateRequestAsync(BorrowingRequest req) { _requests.Add(req); return Task.CompletedTask; }
+        public async Task<List<BorrowingRequest>> GetRequestsAsync() => await _context.BorrowingRequests.ToListAsync();
         
-        public Task ApproveRequestAsync(string id)
+        public async Task<BorrowingRequest?> GetRequestAsync(string id) => await _context.BorrowingRequests.FirstOrDefaultAsync(r => r.Id == id);
+        
+        public async Task CreateRequestAsync(BorrowingRequest req) 
+        { 
+            _context.BorrowingRequests.Add(req); 
+            await _context.SaveChangesAsync(); 
+        }
+        
+        public async Task<bool> ApproveRequestAsync(string id)
         {
-            var req = _requests.FirstOrDefault(r => r.Id == id);
-            if (req != null)
+            var req = await _context.BorrowingRequests.FirstOrDefaultAsync(r => r.Id == id);
+            if (req != null && req.Status == "Pending")
             {
+                var book = await _context.Books.FirstOrDefaultAsync(b => b.Title == req.BookTitle);
+                if (book == null || book.Available <= 0)
+                {
+                    return false;
+                }
+
                 req.Status = "Approved";
-                _borrowed.Add(new BorrowingBook { 
+                book.Available--;
+
+                var newBorrowing = new BorrowingBook 
+                { 
                     BookTitle = req.BookTitle, 
                     BorrowerName = req.StudentName, 
                     DueDate = req.ReturnDate, 
                     Status = "Active" 
-                });
+                };
+                _context.BorrowingBooks.Add(newBorrowing);
+                await _context.SaveChangesAsync();
+                return true;
             }
-            return Task.CompletedTask;
+            return false;
+        }
+
+        public async Task<bool> RejectRequestAsync(string id)
+        {
+            var req = await _context.BorrowingRequests.FirstOrDefaultAsync(r => r.Id == id);
+            if (req != null && req.Status == "Pending")
+            {
+                req.Status = "Rejected";
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
         
         // --- BorrowingBooks ---
-        public Task<List<BorrowingBook>> GetBorrowingBooksAsync() => Task.FromResult(_borrowed.ToList());
+        public async Task<List<BorrowingBook>> GetBorrowingBooksAsync() => await _context.BorrowingBooks.ToListAsync();
+
+        public async Task<bool> ReturnBookAsync(string id)
+        {
+            var borrowing = await _context.BorrowingBooks.FirstOrDefaultAsync(b => b.Id == id);
+            if (borrowing != null && borrowing.Status == "Active")
+            {
+                borrowing.Status = "Returned";
+                
+                var book = await _context.Books.FirstOrDefaultAsync(b => b.Title == borrowing.BookTitle);
+                if (book != null)
+                {
+                    book.Available++;
+                }
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
 
         // --- EntryLogs ---
-        public Task<List<EntryLog>> GetEntryLogsAsync() => Task.FromResult(_logs.ToList());
-        public Task CreateEntryLogAsync(EntryLog log) { _logs.Add(log); return Task.CompletedTask; }
+        public async Task<List<EntryLog>> GetEntryLogsAsync() => await _context.EntryLogs.ToListAsync();
+        
+        public async Task CreateEntryLogAsync(EntryLog log) 
+        { 
+            _context.EntryLogs.Add(log); 
+            await _context.SaveChangesAsync(); 
+        }
     }
 }

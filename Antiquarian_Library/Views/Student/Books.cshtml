@@ -15,6 +15,12 @@
             @TempData["Message"]
         </div>
     }
+    @if (TempData["Error"] != null)
+    {
+        <div style="color: var(--error-text); background-color: var(--error-bg); padding: 12px; border-radius: 8px; margin-top: 1rem; text-align: left;">
+            @TempData["Error"]
+        </div>
+    }
 
     <div class="student-books-grid">
         @foreach (var book in Model)
@@ -27,13 +33,27 @@
                     <div>ISBN: @book.ISBN</div>
                     <div>Category: @book.Category</div>
                     <div>Published: @book.Year</div>
-                    <div>Available: @book.Available of @book.Total copies</div>
+                    @{
+                        var pendingDict = ViewBag.PendingCounts as Dictionary<string, int>;
+                        int pendingCount = pendingDict != null && pendingDict.ContainsKey(book.Title) ? pendingDict[book.Title] : 0;
+                        int actuallyAvailable = book.Available - pendingCount;
+                    }
+                    <div>Available: @actuallyAvailable of @book.Total copies</div>
                     <div>Penalty per day: $@book.PenaltyPerDay</div>
                 </div>
 
-                <a asp-action="RequestBorrow" asp-route-bookTitle="@book.Title" class="btn-primary book-card-btn" style="text-decoration: none;">
-                    Request to Borrow
-                </a>
+                @if (actuallyAvailable > 0)
+                {
+                    <a asp-action="RequestBorrow" asp-route-bookTitle="@book.Title" class="btn-primary book-card-btn" style="text-decoration: none;">
+                        Request to Borrow
+                    </a>
+                }
+                else
+                {
+                    <div class="book-card-btn" style="background-color: var(--bg-sidebar); color: var(--accent-tan); text-align: center; pointer-events: none; padding: 0.75rem; border-radius: 8px;">
+                        Out of Stock
+                    </div>
+                }
             </div>
         }
     </div>

@@ -19,5 +19,21 @@ namespace Antiquarian_Library.Controllers
             var borrowed = await _db.GetBorrowingBooksAsync();
             return View(borrowed);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Return(string id)
+        {
+            var success = await _db.ReturnBookAsync(id);
+            if (success)
+            {
+                TempData["Message"] = "Book returned successfully.";
+            }
+            else
+            {
+                TempData["Error"] = "Failed to return the book.";
+            }
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

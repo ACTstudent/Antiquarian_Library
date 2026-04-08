@@ -11,6 +11,13 @@
         Pending Requests (@Model.Count(r => r.Status == "Pending"))
     </div>
     
+    @if (TempData["Error"] != null)
+    {
+        <div style="color: var(--error-text); background-color: var(--error-bg); padding: 12px; border-radius: 8px; margin-bottom: 1rem; text-align: left;">
+            @TempData["Error"]
+        </div>
+    }
+
     <hr style="border: 0; border-top: 1px solid var(--accent-tan); margin-bottom: 1.5rem; margin-left: -1.5rem; margin-right: -1.5rem;" />
 
     <div style="margin-bottom: 1.5rem; position: relative;">
@@ -48,6 +55,11 @@
                                 <form asp-action="Approve" asp-route-id="@item.Id" method="post" style="display:inline;">
                                     <button type="submit" class="btn-primary" style="background-color: var(--success-text); padding: 8px 16px; font-size: 14px; border-radius: 6px;">
                                         <i data-feather="check-circle" style="width: 16px; height: 16px;"></i> Approve
+                                    </button>
+                                </form>
+                                <form asp-action="Reject" asp-route-id="@item.Id" method="post" style="display:inline; margin-left: 4px;">
+                                    <button type="submit" class="btn-primary" style="background-color: var(--error-text); padding: 8px 16px; font-size: 14px; border-radius: 6px;">
+                                        <i data-feather="x-circle" style="width: 16px; height: 16px;"></i> Reject
                                     </button>
                                 </form>
                             }
