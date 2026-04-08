@@ -6,6 +6,6 @@ namespace Antiquarian_Library.Models
         public string BookTitle { get; set; } = string.Empty;
         public string BorrowerName { get; set; } = string.Empty;
         public DateTime DueDate { get; set; }
-        public string Status { get; set; } = "Active"; // Active, Returned
+        public string Status { get; set; } = "Active"; // Active, Returned RAH
     }
 }
